@@ -31,8 +31,8 @@ app.add_middleware(
 # Get the absolute path to the frontend directory
 frontend_dir = Path(__file__).parent.parent / "frontend"
 
-# Mount static files first (but not at root)
-app.mount("/static", StaticFiles(directory=str(frontend_dir), html=True), name="static")
+# Mount static files at root
+app.mount("/js", StaticFiles(directory=str(frontend_dir / "js")), name="js")
 
 # Include all routes from main0
 app.get("/dataset-info")(get_dataset_info)
@@ -44,7 +44,7 @@ app.post("/query-rate")(query_rate)
 # Serve index.html at root
 @app.get("/")
 async def serve_index():
-    index_path = frontend_dir / "index copy.html"
+    index_path = frontend_dir / "index.html"
     if index_path.exists():
         with open(index_path) as f:
             return HTMLResponse(content=f.read(), status_code=200)
